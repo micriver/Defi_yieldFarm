@@ -2,6 +2,7 @@ resources:
 course video: https://www.youtube.com/watch?v=CgXQC4dbGUE&list=PLS5SEs8ZftgUNcUVXtn2KXiE1Ui9B5UrY
 Chai assertion library docs: https://www.chaijs.com/
 Mocha test framework docs: https://mochajs.org/#installation
+When Prettier decides to break your spaces: https://github.com/prettier/prettier/issues/5077 (tdd answer)
 
 
 Inside the TokenFarm smart contract that we're creating, we're setting up a DappToken to get paid out as interest whenever people deposit their DAI tokens into the liquity pool we've created on the TokenFarm.
@@ -90,3 +91,22 @@ name = await tokenFarm.name() = assign name of the contract to the variable "nam
 
 
 ================================================================================
+
+web3.js allows you to connect your frontend to your blockchain backend
+
+First you must connect your metamask wallet to your ganache network and that "investor" account we've been using. When you need to connect Ganache, make sure to use the network ID found in Ganache, complete with the port number. Click on the circular icon, hit import private keys, and then copy paste the private key from the investor account on the blockchain you're testing on.
+Walkthrough for this at this timestamp:
+https://youtu.be/CgXQC4dbGUE?t=6661
+
+When we're connecting to the frontend, we want to pull data from the blockchain we're using and populate the react state with that data. 
+
+First, we have to identify the network that we're using, like so:
+
+// use web3
+const web3 = window.web3
+
+// pull in the network ID
+const networkId = await web3.eth.net.getId()
+
+web3.eth.Contract = allows you to interact with smart contracts on the blockchain as if they were JavaScript objects with JSON formatted data from the ABIs you created when deploying those contracts to the blockchain
+further reading: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#:~:text=The%20web3.,calls%20over%20RPC%20for%20you.
