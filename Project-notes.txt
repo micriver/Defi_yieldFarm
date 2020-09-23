@@ -1,0 +1,92 @@
+resources:
+course video: https://www.youtube.com/watch?v=CgXQC4dbGUE&list=PLS5SEs8ZftgUNcUVXtn2KXiE1Ui9B5UrY
+Chai assertion library docs: https://www.chaijs.com/
+Mocha test framework docs: https://mochajs.org/#installation
+
+
+Inside the TokenFarm smart contract that we're creating, we're setting up a DappToken to get paid out as interest whenever people deposit their DAI tokens into the liquity pool we've created on the TokenFarm.
+
+In order to do that, we have to place all three of those smart contracts onto the blockchain and have them talk to each other. 
+
+1. The investor's deposit their DaiTokens into the TokenFarm (the TokenFarm is our digital bank)
+2. Those deposited DaiTokens in the liquidity pool will earn DappTokens back as interest
+3. You have to put all the DappTokens into the TokenFarm liquity pool so the farm can distribute those tokens
+4. The DappTokens are earned by the investor as interest payments through yield farming
+
+DaiToken 	DappToken
+	\			/
+	  TokenFarm
+	  
+
+
+================================================================================
+Ganache notes:
+
+The first account in our Ganache blockchain network is the DEPLOYER, me in this case. The person who puts the contracts onto the blockchain
+
+The second account in this tutorial is the investor, the person who held some Dai and then earn DAPP tokens for using the project
+
+
+
+================================================================================
+Solidity notes:
+
+A mapping inside of solidity is a key value store or a data structure. key => value. "Give me the and I'll return the value". Used to link user keys to values in smart contracts
+
+EG : 	key (investor address) => value (how may tokens they are currently 												staking)
+
+This is an example of a mapping:
+						  key						value
+		stakingBalance[msg.sender]	= stakingBalance[msg.sender] + _amount;
+	
+	This function can be called more than once so we need to add the current balance to the old one each time
+
+		
+- solidity does not handle decimals so this is what one DAPP token looks like
+all ethereum tokens have 18 decimal places just like usd has two decimal places. 
+- if you want to have 1 million DAPP you need to have 1000000 + 18 zeroes following it without the decimal point
+
+"msg.sender" = the person calling the function
+
+================================================================================
+
+Truffle allows us to write scripts where it'll load our entire app up, we can import smart contracts and all we do is callback function to execute functions automatically.
+
+truffle exec <file path>
+
+Truffle console commands:
+
+truffle compile = make sure the code compiles, creates json files with a description of how the smart contract works
+
+truffle migrate = put the contracts onto the blockchain, running the migrations
+	// your eth value will go down just a bit because you have to create transaction to place the four contracts onto the blockchain, anytime you write data to the blockchain, you have to pay a gas fee and that gas fee is expressed in ether. 1st account is default account for truffle. We assume this first account, in this list, is the person deploying the smart contract whenever we run the migration
+
+	"--reset" flag is used to replace the smart contracts on the blockchain because once the contracts are on the blockchain network initially, they are immutable, they cannot be changed. So the only thing that can be done is a replacement, you have to create a new copy of the contract and put it on the blockchain with an updated address.
+
+// INTERACTING WITH THE SMART CONTRACT ON THE BLOCKCHAIN
+
+"truffle console" = is a javascript runtime environment that lets you use the blockchain and with this command, we are running javascript
+
+	// "truffle(development)> tokenFarm = await TokenFarm.deployed()" = fetch the TokenFarm contract from the ganache development blockchain and storing it in a variable called TokenFarm
+	// the "await" keyword becuase the blockchain is asynchronous because its slow
+	// TokenFarm.deployed() returns a promise, doesn't return the token, waits for the function called to resolve and then sign to a variable
+
+	// assign contract to mDai variable
+	mDai = await DaiToken.deployed()
+	
+	// place accounts into "accounts" variable. This creates an array of accounts from the network
+	accounts = await web3.eth.getAccounts()
+
+	// show balance of the mock DAI account
+	balance = await mDai.balanceOf(accounts[1])
+	balance.toString()
+
+	// show human readable account balance format
+	formattedBalance = web3.utils.fromWei(balance)
+
+tokenFarm.address = shows the address of the smart contract on the blockchain network
+
+name = await tokenFarm.name() = assign name of the contract to the variable "name"
+
+
+================================================================================

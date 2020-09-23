@@ -25,6 +25,7 @@ contract DaiToken {
         balanceOf[msg.sender] = totalSupply;
     }
 
+    // gets called by the sender to an address
     function transfer(address _to, uint256 _value) public returns (bool success) {
         require(balanceOf[msg.sender] >= _value);
         balanceOf[msg.sender] -= _value;
@@ -33,12 +34,14 @@ contract DaiToken {
         return true;
     }
 
+    // we're saying "the tokenfarm (address _spender) can spend _value daiTokens, returns true or false
     function approve(address _spender, uint256 _value) public returns (bool success) {
         allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
     }
 
+    // move funds from this token to someone else FOR YOU, you're giving another contract/entity the ability to do this via this function
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         require(_value <= balanceOf[_from]);
         require(_value <= allowance[_from][msg.sender]);
